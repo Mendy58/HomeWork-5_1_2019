@@ -12,6 +12,7 @@ namespace HomeWork_5_1_2019.Data
         public int Userid { get; set; }
         public DateTime DatePosted { get; set; }
         public List<QuestionsTags> QuestionsTags { get; set; }
+        public List<QuestionLikes> QuestionLikes { get; set; }
         public List<Answer> Answers { get; set; }
     }
 }
