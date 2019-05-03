@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Linq;
 
 namespace HomeWork_5_1_2019.Data
 {
@@ -21,6 +22,8 @@ namespace HomeWork_5_1_2019.Data
         public DbSet<AnswerLikes> AnswerLikes { get; set; }
         public DbSet<QuestionLikes> QuestionLikes { get; set; }
 
+
+
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             optionsBuilder.UseSqlServer(_connectionString);
@@ -28,6 +31,18 @@ namespace HomeWork_5_1_2019.Data
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            //var cascadeFKs = modelBuilder.Model.GetEntityTypes()
+            //.SelectMany(t => t.GetForeignKeys())
+            //.Where(fk => !fk.IsOwnership && fk.DeleteBehavior == DeleteBehavior.Cascade);
+
+            //base.OnModelCreating(modelBuilder);
+
+            foreach (var relationship in modelBuilder.Model.GetEntityTypes().SelectMany(e => e.GetForeignKeys()))
+            {
+                relationship.DeleteBehavior = DeleteBehavior.Restrict;
+            }
+
+            //base.OnModelCreating(modelBuilder); Saw this went with above, pulled off web
             //Taken from here:
             //https://www.learnentityframeworkcore.com/configuration/many-to-many-relationship-configuration
 
