@@ -136,11 +136,13 @@ namespace HomeWork_5_1_2019.Data.Migrations
                 {
                     b.HasOne("HomeWork_5_1_2019.Data.Question")
                         .WithMany("Answers")
-                        .HasForeignKey("QuestionId");
+                        .HasForeignKey("QuestionId")
+                        .OnDelete(DeleteBehavior.Restrict);
 
                     b.HasOne("HomeWork_5_1_2019.Data.User")
                         .WithMany("Answers")
-                        .HasForeignKey("Userid");
+                        .HasForeignKey("Userid")
+                        .OnDelete(DeleteBehavior.Restrict);
                 });
 
             modelBuilder.Entity("HomeWork_5_1_2019.Data.AnswerLikes", b =>
@@ -148,12 +150,12 @@ namespace HomeWork_5_1_2019.Data.Migrations
                     b.HasOne("HomeWork_5_1_2019.Data.Answer", "Answer")
                         .WithMany("AnswerLikes")
                         .HasForeignKey("Answerid")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .OnDelete(DeleteBehavior.Restrict);
 
                     b.HasOne("HomeWork_5_1_2019.Data.User", "User")
                         .WithMany("AnswerLikes")
                         .HasForeignKey("Userid")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .OnDelete(DeleteBehavior.Restrict);
                 });
 
             modelBuilder.Entity("HomeWork_5_1_2019.Data.Question", b =>
@@ -161,7 +163,7 @@ namespace HomeWork_5_1_2019.Data.Migrations
                     b.HasOne("HomeWork_5_1_2019.Data.User")
                         .WithMany("Questions")
                         .HasForeignKey("Userid")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .OnDelete(DeleteBehavior.Restrict);
                 });
 
             modelBuilder.Entity("HomeWork_5_1_2019.Data.QuestionLikes", b =>
@@ -169,12 +171,12 @@ namespace HomeWork_5_1_2019.Data.Migrations
                     b.HasOne("HomeWork_5_1_2019.Data.Question", "Question")
                         .WithMany("QuestionLikes")
                         .HasForeignKey("Questionid")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .OnDelete(DeleteBehavior.Restrict);
 
                     b.HasOne("HomeWork_5_1_2019.Data.User", "User")
                         .WithMany("QuestionLikes")
                         .HasForeignKey("Userid")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .OnDelete(DeleteBehavior.Restrict);
                 });
 
             modelBuilder.Entity("HomeWork_5_1_2019.Data.QuestionsTags", b =>
@@ -182,12 +184,12 @@ namespace HomeWork_5_1_2019.Data.Migrations
                     b.HasOne("HomeWork_5_1_2019.Data.Question", "Question")
                         .WithMany("QuestionsTags")
                         .HasForeignKey("QuestionId")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .OnDelete(DeleteBehavior.Restrict);
 
                     b.HasOne("HomeWork_5_1_2019.Data.Tag", "Tag")
                         .WithMany("QuestionsTags")
                         .HasForeignKey("TagId")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .OnDelete(DeleteBehavior.Restrict);
                 });
 #pragma warning restore 612, 618
         }

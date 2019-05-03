@@ -2,10 +2,18 @@
 
 namespace HomeWork_5_1_2019.Data.Migrations
 {
-    public partial class PersonQMigrationUpdate : Migration
+    public partial class PersonQM : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.DropForeignKey(
+                name: "FK_QuestionsTags_Questions_QuestionId",
+                table: "QuestionsTags");
+
+            migrationBuilder.DropForeignKey(
+                name: "FK_QuestionsTags_Tags_TagId",
+                table: "QuestionsTags");
+
             migrationBuilder.AddColumn<int>(
                 name: "Userid",
                 table: "Answers",
@@ -26,13 +34,13 @@ namespace HomeWork_5_1_2019.Data.Migrations
                         column: x => x.Answerid,
                         principalTable: "Answers",
                         principalColumn: "id",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
                         name: "FK_AnswerLikes_User_Userid",
                         column: x => x.Userid,
                         principalTable: "User",
                         principalColumn: "id",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
@@ -50,13 +58,13 @@ namespace HomeWork_5_1_2019.Data.Migrations
                         column: x => x.Questionid,
                         principalTable: "Questions",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
                         name: "FK_QuestionLikes_User_Userid",
                         column: x => x.Userid,
                         principalTable: "User",
                         principalColumn: "id",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateIndex(
@@ -93,7 +101,23 @@ namespace HomeWork_5_1_2019.Data.Migrations
                 column: "Userid",
                 principalTable: "User",
                 principalColumn: "id",
-                onDelete: ReferentialAction.Cascade);
+                onDelete: ReferentialAction.Restrict);
+
+            migrationBuilder.AddForeignKey(
+                name: "FK_QuestionsTags_Questions_QuestionId",
+                table: "QuestionsTags",
+                column: "QuestionId",
+                principalTable: "Questions",
+                principalColumn: "Id",
+                onDelete: ReferentialAction.Restrict);
+
+            migrationBuilder.AddForeignKey(
+                name: "FK_QuestionsTags_Tags_TagId",
+                table: "QuestionsTags",
+                column: "TagId",
+                principalTable: "Tags",
+                principalColumn: "Id",
+                onDelete: ReferentialAction.Restrict);
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
@@ -105,6 +129,14 @@ namespace HomeWork_5_1_2019.Data.Migrations
             migrationBuilder.DropForeignKey(
                 name: "FK_Questions_User_Userid",
                 table: "Questions");
+
+            migrationBuilder.DropForeignKey(
+                name: "FK_QuestionsTags_Questions_QuestionId",
+                table: "QuestionsTags");
+
+            migrationBuilder.DropForeignKey(
+                name: "FK_QuestionsTags_Tags_TagId",
+                table: "QuestionsTags");
 
             migrationBuilder.DropTable(
                 name: "AnswerLikes");
@@ -123,6 +155,22 @@ namespace HomeWork_5_1_2019.Data.Migrations
             migrationBuilder.DropColumn(
                 name: "Userid",
                 table: "Answers");
+
+            migrationBuilder.AddForeignKey(
+                name: "FK_QuestionsTags_Questions_QuestionId",
+                table: "QuestionsTags",
+                column: "QuestionId",
+                principalTable: "Questions",
+                principalColumn: "Id",
+                onDelete: ReferentialAction.Cascade);
+
+            migrationBuilder.AddForeignKey(
+                name: "FK_QuestionsTags_Tags_TagId",
+                table: "QuestionsTags",
+                column: "TagId",
+                principalTable: "Tags",
+                principalColumn: "Id",
+                onDelete: ReferentialAction.Cascade);
         }
     }
 }

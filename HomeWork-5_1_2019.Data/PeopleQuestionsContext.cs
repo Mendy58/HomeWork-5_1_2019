@@ -42,7 +42,7 @@ namespace HomeWork_5_1_2019.Data
                 relationship.DeleteBehavior = DeleteBehavior.Restrict;
             }
 
-            //base.OnModelCreating(modelBuilder); Saw this went with above, pulled off web
+            //base.OnModelCreating(modelBuilder);
             //Taken from here:
             //https://www.learnentityframeworkcore.com/configuration/many-to-many-relationship-configuration
 
@@ -68,12 +68,17 @@ namespace HomeWork_5_1_2019.Data
             modelBuilder.Entity<QuestionLikes>()
                 .HasOne(qt => qt.User)
                 .WithMany(q => q.QuestionLikes)
-                .HasForeignKey(q => q.Userid);
+                .HasForeignKey(q => q.Userid).OnDelete(DeleteBehavior.Restrict);
 
             modelBuilder.Entity<QuestionLikes>()
                 .HasOne(qt => qt.Question)
                 .WithMany(q => q.QuestionLikes)
-                .HasForeignKey(q => q.Questionid);
+                .HasForeignKey(q => q.Questionid).OnDelete(DeleteBehavior.Restrict);
+
+            //modelBuilder.Entity<Question>()
+            //.HasOne(p => p.Userid)
+            //.WithMany(q => q.)
+            //.OnDelete(DeleteBehavior.Restrict);
 
             modelBuilder.Entity<AnswerLikes>()
              .HasKey(qt => new { qt.Answerid, qt.Userid });
