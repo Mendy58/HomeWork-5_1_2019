@@ -4,14 +4,16 @@ using HomeWork_5_1_2019.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace HomeWork_5_1_2019.Data.Migrations
 {
     [DbContext(typeof(PeopleQuestionsContext))]
-    partial class PeopleQuestionsContextModelSnapshot : ModelSnapshot
+    [Migration("20190506063549_Questionid")]
+    partial class Questionid
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

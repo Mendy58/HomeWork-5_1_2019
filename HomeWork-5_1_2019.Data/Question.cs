@@ -6,6 +6,12 @@ namespace HomeWork_5_1_2019.Data
 {
     public class Question
     {
+        public Question()
+        {
+            QuestionsTags = new List<QuestionsTags>();
+            QuestionLikes = new List<QuestionLikes>();
+            Answers = new List<Answer>();
+        }
         public int Id { get; set; }
         public string Title { get; set; }
         public string Text { get; set; }

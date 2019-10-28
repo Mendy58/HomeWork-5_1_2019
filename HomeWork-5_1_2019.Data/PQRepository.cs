@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using BCrypt.Net;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -6,7 +7,7 @@ using System.Text;
 
 namespace HomeWork_5_1_2019.Data
 {
-    class PQRepository
+    public class PQRepository
     {
         private string _connectionstring;
 
@@ -15,7 +16,7 @@ namespace HomeWork_5_1_2019.Data
             _connectionstring = _ConnnectionString;
         }
         
-        public IEnumerable<Question> GetUserQuestion(int id)
+        public IEnumerable<Question> GetUserQuestions(int id)
         {
             using (PeopleQuestionsContext PQ = new PeopleQuestionsContext(_connectionstring))
             {
@@ -42,15 +43,40 @@ namespace HomeWork_5_1_2019.Data
         {
             using (PeopleQuestionsContext PQ = new PeopleQuestionsContext(_connectionstring))
             {
-                return PQ.QuestionsTags.Where(q => q.TagId == tagid).Select(q => q.Question).ToList();
+                return PQ.QuestionsTags.Where(q => q.TagId == tagid).Select(q => q.Question).Include(a => a.Answers).ToList();
             }
         }
-        public void AddQuestion(Question q)
+        public void AddQuestion(Question q, IEnumerable<string> tags)
         {
             using (PeopleQuestionsContext PQ = new PeopleQuestionsContext(_connectionstring))
             {
                 PQ.Questions.Add(q);
+                foreach (string tag in tags)
+                {
+                    Tag t = GetTag(tag);
+                    int tagId;
+                    if (t == null)
+                    {
+                        tagId = AddTag(tag);
+                    }
+                    else
+                    {
+                        tagId = t.Id;
+                    }
+                    PQ.QuestionsTags.Add(new QuestionsTags
+                    {
+                        QuestionId = q.Id,
+                        TagId = tagId
+                    });
+                }
                 PQ.SaveChanges();
+            }
+        }
+        private Tag GetTag(string name)
+        {
+            using (var ctx = new PeopleQuestionsContext(_connectionstring))
+            {
+                return ctx.Tags.FirstOrDefault(t => t.Name == name);
             }
         }
         public void AddAnswer(Answer a)
@@ -61,10 +87,17 @@ namespace HomeWork_5_1_2019.Data
                 PQ.SaveChanges();
             }
         }
+        public int GetUseridByEmail(string email)
+        {
+            using (PeopleQuestionsContext PQ = new PeopleQuestionsContext(_connectionstring))
+            {
+                return PQ.User.FirstOrDefault(u => u.email == email).id;
+            }
+        }
         public void AddUser(User user)
         {
-            string PasswordHash = BCrypt.Net.BCrypt.HashPassword(user.PasswordHash);
-            user.PasswordHash = PasswordHash;
+            string HashedPassword = BCrypt.Net.BCrypt.HashPassword(user.PasswordHash, SaltRevision.Revision2A);
+            user.PasswordHash = HashedPassword;
             using (PeopleQuestionsContext PQ = new PeopleQuestionsContext(_connectionstring))
             {
                 PQ.User.Add(user);
@@ -76,7 +109,25 @@ namespace HomeWork_5_1_2019.Data
             string PasswordHash = BCrypt.Net.BCrypt.HashPassword(Password);
             using (PeopleQuestionsContext PQ = new PeopleQuestionsContext(_connectionstring))
             {
-                return PQ.User.FirstOrDefault(U => U.email.ToLower() == email.ToLower() && U.PasswordHash == PasswordHash);
+                User s = PQ.User.FirstOrDefault(U => U.email.ToLower() == email.ToLower());
+                if(BCrypt.Net.BCrypt.Verify(Password, s.PasswordHash))
+                {
+                    return s;
+                }
+                else
+                {
+                    return null;
+                }
+            }
+        }
+        private int AddTag(string name)
+        {
+            using (var ctx = new PeopleQuestionsContext(_connectionstring))
+            {
+                var tag = new Tag { Name = name };
+                ctx.Tags.Add(tag);
+                ctx.SaveChanges();
+                return tag.Id;
             }
         }
     }

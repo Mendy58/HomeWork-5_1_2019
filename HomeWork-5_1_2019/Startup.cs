@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
@@ -18,11 +19,20 @@ namespace HomeWork_5_1_2019
             Configuration = configuration;
         }
 
+        public const string CookieScheme = "UserAuth";
+
         public IConfiguration Configuration { get; }
 
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddAuthentication(CookieScheme)
+                .AddCookie(CookieScheme, options =>
+                {
+                    options.AccessDeniedPath = "/account/denied";
+                    options.LoginPath = "/Home/login";
+                });
+
             services.Configure<CookiePolicyOptions>(options =>
             {
                 // This lambda determines whether user consent for non-essential cookies is needed for a given request.
@@ -48,6 +58,15 @@ namespace HomeWork_5_1_2019
 
             app.UseStaticFiles();
             app.UseCookiePolicy();
+            app.UseAuthentication();
+
+            //app.UseCookieAuthentication(new CookieAuthenticationOptions()
+            //{
+            //    AuthenticationScheme = "PutANameHere",
+            //    LoginPath = new PathString("/Home/Login/"),
+            //    AutomaticAuthenticate = true,
+            //    AutomaticChallenge = true
+            //});
 
             app.UseMvc(routes =>
             {
